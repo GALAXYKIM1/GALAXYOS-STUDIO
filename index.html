@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALAXYOS STUDIO - مكتبة المانهوا المطورة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* الأساسيات والمتغيرات */
+        :root {
+            --primary-color: #007AFF;
+            --accent-color: #007AFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --bg-primary: #F5F5F7;
+            --bg-secondary: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: #D2D2D7;
+            --hover-bg: rgba(0, 0, 0, 0.03);
+            --glow-color: rgba(0, 122, 255, 0.15);
+            --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            
+            /* متغيرات التوهج حسب التقييم */
+            --glow-excellent: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 215, 0, 0.25) 0%, 
+                rgba(255, 215, 0, 0.15) 30%, 
+                transparent 70%);
+            --glow-great: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(0, 122, 255, 0.25) 0%, 
+                rgba(0, 122, 255, 0.15) 30%, 
+                transparent 70%);
+            --glow-good: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 149, 0, 0.25) 0%, 
+                rgba(255, 149, 0, 0.15) 30%, 
+                transparent 70%);
+            --glow-average: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(142, 142, 147, 0.25) 0%, 
+                rgba(142, 142, 147, 0.15) 30%, 
+                transparent 70%);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #0A84FF;
+            --accent-color: #0A84FF;
+            --text-primary: #F5F5F7;
+            --text-secondary: #A1A1A6;
+            --bg-primary: #000000;
+            --bg-secondary: #1D1D1F;
+            --card-bg: #1D1D1F;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --border-color: #424245;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --glow-color: rgba(10, 132, 255, 0.2);
+            --header-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            
+            --glow-excellent: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 215, 0, 0.35) 0%, 
+                rgba(255, 215, 0, 0.2) 30%, 
+                transparent 70%);
+            --glow-great: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(10, 132, 255, 0.35) 0%, 
+                rgba(10, 132, 255, 0.2) 30%, 
+                transparent 70%);
+            --glow-good: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 149, 0, 0.35) 0%, 
+                rgba(255, 149, 0, 0.2) 30%, 
+                transparent 70%);
+            --glow-average: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(142, 142, 147, 0.35) 0%, 
+                rgba(142, 142, 147, 0.2) 30%, 
+                transparent 70%);
+        }
+
+        /* إعادة التعيين */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                       color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                       border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                       transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            direction: rtl;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* تأثير Parallax */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+            transition: transform 0.1s linear;
+        }
+
+        /* الهيدر والشعار */
+        header {
+            padding: 1.5rem 2rem;
+            background: var(--header-gradient);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            backdrop-filter: blur(20px);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] header {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent-color);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .logo-part {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .galaxy {
+            color: white;
+            text-shadow: 
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        [data-theme="light"] .galaxy {
+            color: black;
+            text-shadow: 
+                -1px -1px 0 #fff,
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
+        }
+
+        .os {
+            color: var(--accent-color);
+            font-weight: 900;
+        }
+
+        .studio {
+            color: white;
+            text-shadow: 
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+            font-weight: 600;
+        }
+
+        /* شريط البحث مع الاقتراحات */
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1D1D1F;
+            font-size: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] .search-bar {
+            background-color: rgba(30, 30, 32, 0.9);
+            color: #F5F5F7;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-top: 8px;
+            box-shadow: 0 8px 24px var(--shadow-color);
+            max-height: 400px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .search-suggestions.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .suggestion-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .suggestion-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .suggestion-text {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .suggestion-rating {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* زر الثيم */
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg) scale(1.1);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* التنقل */
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px var(--shadow-color);
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* الفلاتر */
+        .filters-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px var(--shadow-color);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Carousel للأكثر مشاهدة */
+        .carousel-section {
+            margin-bottom: 3rem;
+        }
+
+        .carousel-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .carousel-title::after {
+            content: '🔥';
+            font-size: 1.5rem;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            padding: 1rem 0;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 1rem;
+        }
+
+        .carousel-card {
+            min-width: 280px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: relative;
+            cursor: pointer;
+            transform: perspective(1000px) rotateY(var(--carousel-rotate, 0deg));
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .carousel-card:hover {
+            transform: perspective(1000px) rotateY(0deg) translateY(-10px) scale(1.05);
+        }
+
+        .carousel-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(45deg, #FF2D55, #FF375F);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .carousel-nav:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            right: 1rem;
+        }
+
+        .carousel-nav.next {
+            left: 1rem;
+        }
+
+        /* بطاقات المانهوا */
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px var(--shadow-color);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border-color);
+            transform-style: preserve-3d;
+            animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(60px) rotateX(-20deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+            border-radius: 20px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card.excellent::before {
+            background: var(--glow-excellent);
+        }
+
+        .card.great::before {
+            background: var(--glow-great);
+        }
+
+        .card.good::before {
+            background: var(--glow-good);
+        }
+
+        .card.average::before {
+            background: var(--glow-average);
+        }
+
+        .card:hover {
+            transform: translateY(-16px) scale(1.03) rotateY(var(--card-rotate-y, 0deg)) rotateX(var(--card-rotate-x, 0deg));
+            box-shadow: 
+                0 25px 50px var(--shadow-color),
+                0 0 60px rgba(0, 122, 255, 0.15);
+        }
+
+        .card-preview {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover .card-preview {
+            opacity: 1;
+        }
+
+        .preview-content {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            transform: translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+        }
+
+        .card:hover .preview-content {
+            transform: translateY(0);
+        }
+
+        .preview-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .preview-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .favorite-btn.active {
+            background: #FF2D55;
+            color: white;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+            background-color: var(--card-bg);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge.new {
+            background: linear-gradient(45deg, #34C759, #32D74B);
+            color: white;
+        }
+
+        .badge.popular {
+            background: linear-gradient(45deg, #FF2D55, #FF375F);
+            color: white;
+        }
+
+        .card-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+
+        .category-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--hover-bg);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.25rem;
+            color: #FF9500;
+            font-size: 1.1rem;
+        }
+
+        .rating-score {
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .rating-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* المودال */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--bg-secondary);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 1100px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(50px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(0, 122, 255, 0.2);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            padding: 3rem;
+        }
+
+        @media (max-width: 900px) {
+            .modal-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .modal-cover-container {
+            position: relative;
+        }
+
+        .modal-cover {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-cover:hover {
+            transform: perspective(1000px) rotateY(10deg) scale(1.05);
+        }
+
+        .modal-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            background: linear-gradient(45deg, var(--accent-color), #FF2D55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            padding: 1rem;
+            background-color: var(--hover-bg);
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid transparent;
+        }
+
+        .info-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.1);
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        /* الفصول التفاعلية */
+        .chapters-section {
+            margin-top: 3rem;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .chapter {
+            padding: 1.2rem;
+            background-color: var(--hover-bg);
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .chapter:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .chapter:hover {
+            transform: 
+                translateY(-8px) 
+                translateX(calc(var(--mouse-chapter-x, 0px) * 0.5)) 
+                translateY(calc(var(--mouse-chapter-y, 0px) * 0.5))
+                scale(1.08);
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 
+                0 15px 30px rgba(0, 122, 255, 0.3),
+                0 0 30px rgba(0, 122, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        /* نظام النجوم المتقدم */
+        .rating-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .user-rating {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-rating-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stars-rating {
+            display: flex;
+            gap: 0.4rem;
+            direction: ltr;
+        }
+
+        .star {
+            font-size: 2.2rem;
+            color: #D2D2D7;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .star::before {
+            content: '★';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #FF9500;
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s;
+        }
+
+        .star:hover {
+            transform: scale(1.3);
+        }
+
+        .star:hover::before {
+            width: 100%;
+        }
+
+        .star.active::before {
+            width: 100%;
+        }
+
+        .star.half::before {
+            width: 50%;
+        }
+
+        .average-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--hover-bg);
+            border-radius: 14px;
+        }
+
+        .average-score {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .average-count {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* قسم المفضلة */
+        .favorites-section {
+            margin-top: 3rem;
+            display: none;
+        }
+
+        .favorites-section.active {
+            display: block;
+            animation: fadeIn 0.6s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* الإنجازات */
+        .achievements-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            display: none;
+        }
+
+        .achievements-section.active {
+            display: block;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .achievement {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .achievement:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        /* التعليقات */
+        .comments-section {
+            margin-top: 3rem;
+            display: none;
+        }
+
+        .comments-section.active {
+            display: block;
+        }
+
+        .comment-form {
+            background: var(--hover-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .comment-submit {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .comment-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .comment-user {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .comment-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .comment-text {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* التجاوب */
+        @media (max-width: 1100px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                margin: 0;
+            }
+            
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .nav-tabs {
+                padding-bottom: 0.5rem;
+            }
+            
+            .tab {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .chapters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+        }
+
+        /* الأنيميشن */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* تحميل سلس */
+        .loading {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .loaded {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        /* تأثير التمويه */
+        .blur-in {
+            animation: blurIn 0.8s ease-out forwards;
+        }
+
+        @keyframes blurIn {
+            0% {
+                filter: blur(20px);
+                opacity: 0;
+            }
+            100% {
+                filter: blur(0);
+                opacity: 1;
+            }
+        }
+
+        /* معلومات المستخدم */
+        .user-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--hover-bg);
+            border-radius: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- تأثير Parallax -->
+    <div class="parallax-bg">
+        <div class="parallax-layer" id="parallaxLayer1"></div>
+        <div class="parallax-layer" id="parallaxLayer2"></div>
+    </div>
+
+    <!-- الهيدر -->
+    <header>
+        <div class="header-container">
+            <div class="logo floating">
+                <span class="logo-part galaxy">GALAXY</span>
+                <span class="logo-part os">OS</span>
+                <span class="logo-part studio">STUDIO</span>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchBar" placeholder="ابحث عن مانهوا...">
+                <div class="search-suggestions" id="searchSuggestions">
+                    <!-- الاقتراحات تظهر هنا -->
+                </div>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <!-- التنقل بين الأقسام -->
+        <div class="nav-tabs" id="navTabs">
+            <div class="tab active" data-tab="all">الكل</div>
+            <div class="tab" data-tab="favorites">المفضلة</div>
+            <div class="tab" data-tab="new">جديد هذا الأسبوع</div>
+            <div class="tab" data-tab="popular">الأكثر مشاهدة</div>
+            <div class="tab" data-tab="top-rated">أعلى التقييمات</div>
+            <div class="tab" data-tab="achievements">إنجازاتي</div>
+        </div>
+
+        <!-- الفلاتر -->
+        <div class="filters-container">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">التصنيف</label>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="all">الكل</option>
+                        <option value="action">أكشن</option>
+                        <option value="fantasy">فانتازيا</option>
+                        <option value="romance">رومانسي</option>
+                        <option value="comedy">كوميدي</option>
+                        <option value="drama">دراما</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">المنصة</label>
+                    <select class="filter-select" id="platformFilter">
+                        <option value="all">الكل</option>
+                        <option value="naver">Naver Webtoon</option>
+                        <option value="kakao">KakaoPage</option>
+                        <option value="lezhin">Lezhin Comics</option>
+                        <option value="tapas">Tapas</option>
+                        <option value="tencent">Tencent Comics</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">السنة</label>
+                    <select class="filter-select" id="yearFilter">
+                        <option value="all">الكل</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">التقييم</label>
+                    <select class="filter-select" id="ratingFilter">
+                        <option value="all">الكل</option>
+                        <option value="9">9+ ⭐</option>
+                        <option value="8">8+ ⭐</option>
+                        <option value="7">7+ ⭐</option>
+                        <option value="6">6+ ⭐</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel للأكثر مشاهدة -->
+        <div class="carousel-section">
+            <h2 class="carousel-title">الأكثر مشاهدة هذا الأسبوع</h2>
+            <div class="carousel-container">
+                <button class="carousel-nav prev" id="carouselPrev">❮</button>
+                <button class="carousel-nav next" id="carouselNext">❯</button>
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- البطاقات المتحركة تظهر هنا -->
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم المفضلة -->
+        <div class="favorites-section" id="favoritesSection">
+            <h2 class="section-title">مانهواي المفضلة</h2>
+            <div class="cards-grid" id="favoritesGrid">
+                <!-- المفضلة تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- الإنجازات -->
+        <div class="achievements-section" id="achievementsSection">
+            <h2>🎖️ إنجازاتي</h2>
+            <div class="achievements-grid" id="achievementsGrid">
+                <!-- الإنجازات تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- البطاقات الرئيسية -->
+        <div id="mainContent">
+            <h2 class="section-title">أفضل المانهوا المترجمة</h2>
+            <div class="cards-grid" id="cardsContainer">
+                <!-- البطاقات تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- معلومات المستخدم -->
+        <div class="user-stats" id="userStats">
+            <div class="stat-item">
+                <div class="stat-value" id="readChapters">0</div>
+                <div class="stat-label">فصل مقروء</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="ratedManhwa">0</div>
+                <div class="stat-label">مانهوا مُقيمة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="favoriteCount">0</div>
+                <div class="stat-label">في المفضلة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="achievementCount">0</div>
+                <div class="stat-label">إنجاز</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- المودال -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-content" id="modalContent">
+                <!-- المحتوى يظهر هنا -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المانهوا الكاملة
+        const manhwaData = [
+            {
+                id: 1,
+                title: "العودة إلى القمة",
+                cover: "https://images.unsplash.com/photo-1635805737707-575885ab0820?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.8,
+                reviews: 12456,
+                author: "كيم شيونهوا",
+                artist: "بارك جيونغ-جي",
+                platform: "Naver Webtoon",
+                country: "كوريا الجنوبية",
+                year: 2020,
+                chapters: 150,
+                category: ["action", "sports", "drama"],
+                views: 2548000,
+                weeklyViews: 125000,
+                description: "بعد الموت المفاجئ، يعود لاعب كرة السلة المحترف إلى سنوات مراهقته ليصحح أخطاء الماضي ويصل إلى القمة مرة أخرى.",
+                isNew: false,
+                isPopular: true,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 2,
+                title: "سولو ليفلينج",
+                cover: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.5,
+                reviews: 9876,
+                author: "تشو سونغ-جي",
+                artist: "جانغ سونغ-راك",
+                platform: "KakaoPage",
+                country: "كوريا الجنوبية",
+                year: 2018,
+                chapters: 250,
+                category: ["action", "fantasy", "adventure"],
+                views: 3125000,
+                weeklyViews: 98000,
+                description: "في عالم حيث يجب على الجميع دخول الأبراج للقتال، أنا الوحيد الذي يمكنه رفع مستواي دون مساعدة.",
+                isNew: true,
+                isPopular: true,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 3,
+                title: "الأخوية",
+                cover: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.7,
+                reviews: 8567,
+                author: "لي ها-نا",
+                artist: "بارك مين-هو",
+                platform: "Lezhin Comics",
+                country: "كوريا الجنوبية",
+                year: 2019,
+                chapters: 180,
+                category: ["fantasy", "action", "supernatural"],
+                views: 1980000,
+                weeklyViews: 75000,
+                description: "عائلة من الصيادين الذين يحمون البشرية من الوحوش في عالم مليء بالأخطار الخفية.",
+                isNew: false,
+                isPopular: true,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 4,
+                title: "المنتقم الأسطوري",
+                cover: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.3,
+                reviews: 6543,
+                author: "سونغ جي-هو",
+                artist: "كيم يونغ-ها",
+                platform: "Tapas",
+                country: "كوريا الجنوبية",
+                year: 2021,
+                chapters: 120,
+                category: ["action", "revenge", "fantasy"],
+                views: 1420000,
+                weeklyViews: 62000,
+                description: "بعد أن تعرض للخيانة والقتل، يعود الأبطال الأقوى للانتقام من أولئك الذين تخلوا عنه.",
+                isNew: true,
+                isPopular: false,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 5,
+                title: "الفناء الخالد",
+                cover: "https://images.unsplash.com/photo-1531315630201-bb15abeb1653?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.6,
+                reviews: 11234,
+                author: "وانغ لين",
+                artist: "إير جيانغ",
+                platform: "Tencent Comics",
+                country: "الصين",
+                year: 2017,
+                chapters: 400,
+                category: ["fantasy", "cultivation", "adventure"],
+                views: 5120000,
+                weeklyViews: 89000,
+                description: "رحلة طويلة من الخلود في عالم الخيال الصيني حيث القوة والمكائد لا تنتهي.",
+                isNew: false,
+                isPopular: true,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 6,
+                title: "سيد السحر",
+                cover: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 9.4,
+                reviews: 7654,
+                author: "ريديس رين",
+                artist: "يوو شيرايشي",
+                platform: "Comic Walker",
+                country: "اليابان",
+                year: 2016,
+                chapters: 300,
+                category: ["fantasy", "magic", "isekai"],
+                views: 2870000,
+                weeklyViews: 55000,
+                description: "ساحر عظيم يعود إلى طفولته ليصبح الأقوى في تاريخ السحر.",
+                isNew: false,
+                isPopular: false,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 7,
+                title: "حرب العشائر",
+                cover: "https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 8.9,
+                reviews: 4321,
+                author: "بارك جي-وون",
+                artist: "لي مين-هو",
+                platform: "Naver Webtoon",
+                country: "كوريا الجنوبية",
+                year: 2022,
+                chapters: 80,
+                category: ["action", "martial arts", "drama"],
+                views: 980000,
+                weeklyViews: 45000,
+                description: "في عالم العشائر القاسي، يجب على البطل أن يتسلق السلم الاجتماعي بالقوة والمكر.",
+                isNew: true,
+                isPopular: true,
+                userRating: 0,
+                userComments: []
+            },
+            {
+                id: 8,
+                title: "قصة حب في المكتب",
+                cover: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                rating: 8.7,
+                reviews: 5678,
+                author: "كم سيو-يون",
+                artist: "يون جي-ها",
+                platform: "KakaoPage",
+                country: "كوريا الجنوبية",
+                year: 2021,
+                chapters: 110,
+                category: ["romance", "comedy", "drama"],
+                views: 1650000,
+                weeklyViews: 38000,
+                description: "قصة حب كوميدية بين موظفين في شركة كبيرة، مليئة بالمواقف المضحكة والمشاعر.",
+                isNew: false,
+                isPopular: false,
+                userRating: 0,
+                userComments: []
+            }
+        ];
+
+        // بيانات الإنجازات
+        const achievementsData = [
+            { id: 1, title: "القارئ المبتدئ", desc: "اقرأ 10 فصول", icon: "📚", target: 10, current: 0, type: "chapters" },
+            { id: 2, title: "الناقد المحترف", desc: "قيم 5 مانهوا", icon: "⭐", target: 5, current: 0, type: "ratings" },
+            { id: 3, title: "جامع المفضلة", desc: "أضف 3 مانهوا للمفضلة", icon: "❤️", target: 3, current: 0, type: "favorites" },
+            { id: 4, title: "المعلق النشيط", desc: "اكتب 5 تعليقات", icon: "💬", target: 5, current: 0, type: "comments" },
+            { id: 5, title: "الخبير الثقافي", desc: "استكشف 3 أنواع مختلفة", icon: "🎭", target: 3, current: 0, type: "genres" },
+            { id: 6, title: "بطل الأسبوع", desc: "اقرأ 20 فصل في أسبوع", icon: "🏆", target: 20, current: 0, type: "weekly" }
+        ];
+
+        // حالة التطبيق
+        const appState = {
+            theme: 'light',
+            favorites: new Set(),
+            userRatings: {},
+            readChapters: 0,
+            userComments: {},
+            currentTab: 'all',
+            achievements: achievementsData,
+            searchQuery: ''
+        };
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل الحالة من localStorage
+            loadAppState();
+            
+            // تهيئة الثيم
+            initTheme();
+            
+            // تهيئة البطاقات
+            renderAllCards();
+            renderCarousel();
+            
+            // تهيئة الإنجازات
+            renderAchievements();
+            updateUserStats();
+            
+            // إضافة مستمعي الأحداث
+            initEventListeners();
+            
+            // تهيئة تأثير Parallax
+            initParallax();
+            
+            // تحسين أداء الحركات
+            initPerformance();
+            
+            // تحميل متدرج للبطاقات
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('loaded');
+                    }, index * 100);
+                });
+            }, 300);
+        });
+
+        // تحميل حالة التطبيق
+        function loadAppState() {
+            const savedState = localStorage.getItem('galaxyos-state');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                appState.favorites = new Set(state.favorites || []);
+                appState.userRatings = state.userRatings || {};
+                appState.readChapters = state.readChapters || 0;
+                appState.userComments = state.userComments || {};
+                appState.achievements = state.achievements || achievementsData;
+                
+                // تحديث بيانات المانهوا بالتقييمات المحفوظة
+                manhwaData.forEach(manhwa => {
+                    if (appState.userRatings[manhwa.id]) {
+                        manhwa.userRating = appState.userRatings[manhwa.id];
+                    }
+                    if (appState.userComments[manhwa.id]) {
+                        manhwa.userComments = appState.userComments[manhwa.id];
+                    }
+                });
+                
+                updateAchievements();
+            }
+        }
+
+        // حفظ حالة التطبيق
+        function saveAppState() {
+            const state = {
+                favorites: Array.from(appState.favorites),
+                userRatings: appState.userRatings,
+                readChapters: appState.readChapters,
+                userComments: appState.userComments,
+                achievements: appState.achievements,
+                theme: appState.theme
+            };
+            localStorage.setItem('galaxyos-state', JSON.stringify(state));
+        }
+
+        // تهيئة الثيم
+        function initTheme() {
+            const savedTheme = localStorage.getItem('galaxyos-theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme) {
+                appState.theme = savedTheme;
+            } else if (systemPrefersDark) {
+                appState.theme = 'dark';
+            }
+            
+            document.body.setAttribute('data-theme', appState.theme);
+            updateThemeIcon();
+            
+            // مراقبة تغيير الثيم في النظام
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('galaxyos-theme')) {
+                    appState.theme = e.matches ? 'dark' : 'light';
+                    document.body.setAttribute('data-theme', appState.theme);
+                    updateThemeIcon();
+                }
+            });
+        }
+
+        // تحديث أيقونة الثيم
+        function updateThemeIcon() {
+            const icon = document.querySelector('#themeToggle i');
+            icon.className = appState.theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // تهيئة جميع البطاقات
+        function renderAllCards() {
+            renderCards('all');
+        }
+
+        // عرض البطاقات مع الفلترة
+        function renderCards(filter = 'all') {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+            
+            let filteredManhwa = [...manhwaData];
+            
+            // تطبيق الفلاتر
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const platformFilter = document.getElementById('platformFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            const ratingFilter = document.getElementById('ratingFilter').value;
+            
+            if (categoryFilter !== 'all') {
+                filteredManhwa = filteredManhwa.filter(m => m.category.includes(categoryFilter));
+            }
+            
+            if (platformFilter !== 'all') {
+                filteredManhwa = filteredManhwa.filter(m => {
+                    const platformMap = {
+                        'naver': 'Naver Webtoon',
+                        'kakao': 'KakaoPage',
+                        'lezhin': 'Lezhin Comics',
+                        'tapas': 'Tapas',
+                        'tencent': 'Tencent Comics'
+                    };
+                    return m.platform === platformMap[platformFilter];
+                });
+            }
+            
+            if (yearFilter !== 'all') {
+                filteredManhwa = filteredManhwa.filter(m => m.year.toString() === yearFilter);
+            }
+            
+            if (ratingFilter !== 'all') {
+                filteredManhwa = filteredManhwa.filter(m => m.rating >= parseFloat(ratingFilter));
+            }
+            
+            // تطبيق التبويب النشط
+            if (appState.currentTab === 'favorites') {
+                filteredManhwa = filteredManhwa.filter(m => appState.favorites.has(m.id));
+            } else if (appState.currentTab === 'new') {
+                filteredManhwa = filteredManhwa.filter(m => m.isNew);
+            } else if (appState.currentTab === 'popular') {
+                filteredManhwa = filteredManhwa.filter(m => m.isPopular);
+            } else if (appState.currentTab === 'top-rated') {
+                filteredManhwa = filteredManhwa.sort((a, b) => b.rating - a.rating);
+            }
+            
+            // تطبيق البحث إذا كان موجودًا
+            if (appState.searchQuery) {
+                filteredManhwa = filteredManhwa.filter(m => 
+                    m.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
+                    m.author.toLowerCase().includes(appState.searchQuery.toLowerCase())
+                );
+            }
+            
+            // إضافة البطاقات
+            filteredManhwa.forEach((manhwa, index) => {
+                setTimeout(() => {
+                    const card = createCard(manhwa);
+                    container.appendChild(card);
+                }, index * 50);
+            });
+            
+            // إضافة تأثيرات الماوس للبطاقات الجديدة
+            setTimeout(() => initCardHoverEffects(), 100);
+        }
+
+        // إنشاء بطاقة
+        function createCard(manhwa) {
+            const card = document.createElement('div');
+            card.className = `card ${getRatingClass(manhwa.rating)} loading`;
+            card.dataset.id = manhwa.id;
+            
+            // تحديد فئة التوهج حسب التقييم
+            function getRatingClass(rating) {
+                if (rating >= 9.5) return 'excellent';
+                if (rating >= 9.0) return 'great';
+                if (rating >= 8.5) return 'good';
+                return 'average';
+            }
+            
+            // إنشاء النجوم
+            const starsCount = Math.floor(manhwa.rating / 2);
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                stars += i < starsCount ? '★' : '☆';
+            }
+            
+            // إنشاء الشارات
+            let badges = '';
+            if (manhwa.isNew) badges += '<span class="badge new">جديد</span>';
+            if (manhwa.isPopular) badges += '<span class="badge popular">شائع</span>';
+            
+            // إنشاء التصنيفات
+            const categoryNames = {
+                'action': 'أكشن',
+                'fantasy': 'فانتازيا',
+                'romance': 'رومانسي',
+                'comedy': 'كوميدي',
+                'drama': 'دراما',
+                'sports': 'رياضي',
+                'adventure': 'مغامرة',
+                'supernatural': 'خارق',
+                'revenge': 'انتقام',
+                'cultivation': 'تطوير',
+                'magic': 'سحر',
+                'isekai': 'عوالم متوازية',
+                'martial arts': 'فنون قتالية'
+            };
+            
+            const categories = manhwa.category.map(cat => 
+                `<span class="category-tag">${categoryNames[cat] || cat}</span>`
+            ).join('');
+            
+            // إنشاء زر المفضلة
+            const isFavorite = appState.favorites.has(manhwa.id);
+            
+            card.innerHTML = `
+                <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${manhwa.id}">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <div class="card-preview">
+                    <div class="preview-content">
+                        <div class="preview-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="preview-text">معاينة سريعة</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">اضغط لعرض التفاصيل</div>
+                    </div>
+                </div>
+                <img src="${manhwa.cover}" alt="${manhwa.title}" class="card-image">
+                <div class="card-content">
+                    <div class="card-title">
+                        <span>${manhwa.title}</span>
+                        <div class="card-badges">${badges}</div>
+                    </div>
+                    <div class="card-categories">${categories}</div>
+                    <div class="card-rating">
+                        <div>
+                            <div class="rating-stars">${stars}</div>
+                            <div class="rating-score">${manhwa.rating}/10</div>
+                        </div>
+                        <div class="rating-count">${manhwa.reviews.toLocaleString()} تقييم</div>
+                    </div>
+                </div>
+            `;
+            
+            // إضافة مستمعي الأحداث
+            const favoriteBtn = card.querySelector('.favorite-btn');
+            favoriteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(manhwa.id);
+            });
+            
+            card.addEventListener('click', () => openModal(manhwa.id));
+            
+            return card;
+        }
+
+        // Carousel للأكثر مشاهدة
+        function renderCarousel() {
+            const track = document.getElementById('carouselTrack');
+            track.innerHTML = '';
+            
+            // ترتيب حسب المشاهدات الأسبوعية
+            const popularManhwa = [...manhwaData]
+                .sort((a, b) => b.weeklyViews - a.weeklyViews)
+                .slice(0, 6);
+            
+            popularManhwa.forEach((manhwa, index) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                card.style.transform = `perspective(1000px) rotateY(${index * 5 - 12}deg)`;
+                card.dataset.index = index;
+                
+                card.innerHTML = `
+                    <div class="carousel-badge">🔥 ${(manhwa.weeklyViews / 1000).toFixed(1)}K مشاهدة</div>
+                    <img src="${manhwa.cover}" alt="${manhwa.title}" style="width: 100%; height: 180px; object-fit: cover;">
+                    <div style="padding: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">${manhwa.title}</h3>
+                        <div style="display: flex; justify-content: space-between; color: #888;">
+                            <span>${manhwa.author}</span>
+                            <span>⭐ ${manhwa.rating}</span>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => openModal(manhwa.id));
+                track.appendChild(card);
+            });
+            
+            // تهيئة التحكم في Carousel
+            initCarouselControls();
+        }
+
+        // التحكم في Carousel
+        function initCarouselControls() {
+            const track = document.getElementById('carouselTrack');
+            const prevBtn = document.getElementById('carouselPrev');
+            const nextBtn = document.getElementById('carouselNext');
+            const cards = track.querySelectorAll('.carousel-card');
+            let currentIndex = 0;
+            
+            function updateCarousel() {
+                const cardWidth = cards[0].offsetWidth + 24; // العرض + الهامش
+                track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+                
+                // تحديث دوران البطاقات
+                cards.forEach((card, index) => {
+                    const relativeIndex = index - currentIndex;
+                    const rotateY = relativeIndex * 5;
+                    card.style.transform = `perspective(1000px) rotateY(${rotateY}deg)`;
+                    card.style.opacity = Math.abs(relativeIndex) > 2 ? '0.5' : '1';
+                });
+            }
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < cards.length - 3) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+            
+            updateCarousel();
+        }
+
+        // عرض الإنجازات
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = '';
+            
+            appState.achievements.forEach(achievement => {
+                const isUnlocked = achievement.current >= achievement.target;
+                const achievementEl = document.createElement('div');
+                achievementEl.className = `achievement ${isUnlocked ? '' : 'locked'}`;
+                achievementEl.innerHTML = `
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-desc">${achievement.desc}</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+                        ${achievement.current}/${achievement.target}
+                    </div>
+                    ${isUnlocked ? '<div style="color: #34C759; margin-top: 0.5rem;">✓ مكتمل</div>' : ''}
+                `;
+                grid.appendChild(achievementEl);
+            });
+        }
+
+        // تحديث الإنجازات
+        function updateAchievements() {
+            // تحديث إنجاز الفصول
+            const chaptersAchievement = appState.achievements.find(a => a.type === 'chapters');
+            if (chaptersAchievement) chaptersAchievement.current = Math.min(appState.readChapters, chaptersAchievement.target);
+            
+            // تحديث إنجاز التقييمات
+            const ratingsCount = Object.keys(appState.userRatings).length;
+            const ratingsAchievement = appState.achievements.find(a => a.type === 'ratings');
+            if (ratingsAchievement) ratingsAchievement.current = Math.min(ratingsCount, ratingsAchievement.target);
+            
+            // تحديث إنجاز المفضلة
+            const favoritesCount = appState.favorites.size;
+            const favoritesAchievement = appState.achievements.find(a => a.type === 'favorites');
+            if (favoritesAchievement) favoritesAchievement.current = Math.min(favoritesCount, favoritesAchievement.target);
+            
+            // تحديث إنجاز التعليقات
+            const commentsCount = Object.values(appState.userComments).reduce((total, comments) => total + comments.length, 0);
+            const commentsAchievement = appState.achievements.find(a => a.type === 'comments');
+            if (commentsAchievement) commentsAchievement.current = Math.min(commentsCount, commentsAchievement.target);
+            
+            saveAppState();
+            renderAchievements();
+            updateUserStats();
+        }
+
+        // تحديث إحصائيات المستخدم
+        function updateUserStats() {
+            document.getElementById('readChapters').textContent = appState.readChapters;
+            document.getElementById('ratedManhwa').textContent = Object.keys(appState.userRatings).length;
+            document.getElementById('favoriteCount').textContent = appState.favorites.size;
+            
+            const unlockedAchievements = appState.achievements.filter(a => a.current >= a.target).length;
+            document.getElementById('achievementCount').textContent = unlockedAchievements;
+        }
+
+        // تأثير تتبع الماوس على البطاقات
+        function initCardHoverEffects() {
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // تحديث متغيرات CSS لتأثير التوهج
+                    this.style.setProperty('--mouse-x', `${x}px`);
+                    this.style.setProperty('--mouse-y', `${y}px`);
+                    
+                    // تأثير الميل الثلاثي الأبعاد
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateY = (x - centerX) / 25;
+                    const rotateX = (centerY - y) / 25;
+                    
+                    this.style.setProperty('--card-rotate-y', `${rotateY}deg`);
+                    this.style.setProperty('--card-rotate-x', `${rotateX}deg`);
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.setProperty('--card-rotate-y', '0deg');
+                    this.style.setProperty('--card-rotate-x', '0deg');
+                });
+            });
+        }
+
+        // تأثير تتبع الماوس للفصول
+        function initChapterHoverEffects() {
+            const chapters = document.querySelectorAll('.chapter');
+            
+            chapters.forEach(chapter => {
+                chapter.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.style.setProperty('--mouse-chapter-x', `${(x - rect.width/2) / 10}px`);
+                    this.style.setProperty('--mouse-chapter-y', `${(y - rect.height/2) / 10}px`);
+                });
+                
+                chapter.addEventListener('mouseleave', function() {
+                    this.style.setProperty('--mouse-chapter-x', '0px');
+                    this.style.setProperty('--mouse-chapter-y', '0px');
+                });
+            });
+        }
+
+        // فتح المودال
+        function openModal(id) {
+            const manhwa = manhwaData.find(m => m.id === id);
+            if (!manhwa) return;
+            
+            appState.readChapters += 1;
+            updateAchievements();
+            
+            const modalContent = document.getElementById('modalContent');
+            
+            // إنشاء الفصول
+            let chaptersHTML = '';
+            const chaptersToShow = Math.min(manhwa.chapters, 12);
+            for (let i = 1; i <= chaptersToShow; i++) {
+                chaptersHTML += `<div class="chapter" data-chapter="${i}">الفصل ${i}</div>`;
+            }
+            
+            // إنشاء النجوم للمستخدم
+            let userStarsHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const isHalf = i % 2 === 0;
+                const starValue = i / 2;
+                const isActive = manhwa.userRating >= starValue;
+                const isHalfActive = isHalf && manhwa.userRating >= starValue - 0.5 && manhwa.userRating < starValue;
+                
+                userStarsHTML += `<span class="star ${isActive ? 'active' : ''} ${isHalfActive ? 'half' : ''}" 
+                    data-rating="${starValue}">★</span>`;
+            }
+            
+            // إنشاء التعليقات
+            let commentsHTML = '';
+            if (manhwa.userComments && manhwa.userComments.length > 0) {
+                manhwa.userComments.forEach(comment => {
+                    commentsHTML += `
+                        <div class="comment">
+                            <div class="comment-header">
+                                <div class="comment-user">مستخدم</div>
+                                <div class="comment-date">${comment.date}</div>
+                            </div>
+                            <div class="comment-text">${comment.text}</div>
+                        </div>
+                    `;
+                });
+            }
+            
+            modalContent.innerHTML = `
+                <div class="modal-cover-container">
+                    <img src="${manhwa.cover}" alt="${manhwa.title}" class="modal-cover">
+                    <button class="favorite-btn ${appState.favorites.has(manhwa.id) ? 'active' : ''}" 
+                            data-id="${manhwa.id}" style="position: absolute; top: 16px; right: 16px;">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="modal-info">
+                    <h2>${manhwa.title}</h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">المؤلف</div>
+                            <div class="info-value">${manhwa.author}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">الرسام</div>
+                            <div class="info-value">${manhwa.artist}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">المنصة</div>
+                            <div class="info-value">${manhwa.platform}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">الدولة</div>
+                            <div class="info-value">${manhwa.country}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">سنة الإصدار</div>
+                            <div class="info-value">${manhwa.year}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">الفصول</div>
+                            <div class="info-value">${manhwa.chapters}</div>
+                        </div>
+                    </div>
+                    
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.8;">
+                        ${manhwa.description}
+                    </p>
+                    
+                    <div class="rating-section">
+                        <div class="average-rating">
+                            <div class="average-score">${manhwa.rating}/10</div>
+                            <div>
+                                <div class="rating-stars">${'★'.repeat(5)}</div>
+                                <div class="average-count">${manhwa.reviews.toLocaleString()} تقييم</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <div class="user-rating">
+                                <div class="user-rating-label">تقييمك:</div>
+                                <div class="stars-rating" id="userStarsRating">
+                                    ${userStarsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chapters-section">
+                        <h3>الفصول المتاحة (${chaptersToShow} من ${manhwa.chapters})</h3>
+                        <div class="chapters-grid" id="chaptersGrid">
+                            ${chaptersHTML}
+                        </div>
+                    </div>
+                    
+                    <div class="comments-section ${commentsHTML ? 'active' : ''}" id="commentsSection">
+                        <h3 style="margin-top: 2rem;">التعليقات</h3>
+                        
+                        <div class="comment-form">
+                            <textarea class="comment-input" id="commentInput" 
+                                placeholder="اكتب تعليقك هنا..."></textarea>
+                            <button class="comment-submit" id="commentSubmit" data-id="${manhwa.id}">
+                                إضافة تعليق
+                            </button>
+                        </div>
+                        
+                        <div class="comments-list" id="commentsList">
+                            ${commentsHTML || '<p style="text-align: center; color: var(--text-secondary);">لا توجد تعليقات بعد.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // إضافة مستمعي الأحداث داخل المودال
+            const favoriteBtn = modalContent.querySelector('.favorite-btn');
+            favoriteBtn.addEventListener('click', () => toggleFavorite(manhwa.id));
+            
+            // نظام النجوم
+            const stars = modalContent.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseFloat(this.dataset.rating);
+                    rateManhwa(manhwa.id, rating);
+                });
+            });
+            
+            // الفصول
+            const chapters = modalContent.querySelectorAll('.chapter');
+            chapters.forEach(chapter => {
+                chapter.addEventListener('click', function() {
+                    const chapterNum = this.dataset.chapter;
+                    readChapter(manhwa.id, chapterNum);
+                });
+            });
+            
+            // التعليقات
+            const commentSubmit = modalContent.querySelector('#commentSubmit');
+            const commentInput = modalContent.querySelector('#commentInput');
+            
+            commentSubmit.addEventListener('click', () => {
+                const text = commentInput.value.trim();
+                if (text) {
+                    addComment(manhwa.id, text);
+                    commentInput.value = '';
+                }
+            });
+            
+            // تهيئة تأثيرات الماوس للفصول
+            setTimeout(() => initChapterHoverEffects(), 100);
+            
+            // عرض المودال
+            const modal = document.getElementById('modalOverlay');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // إظهار قسم التعليقات إذا كان هناك تعليقات
+            if (commentsHTML) {
+                document.getElementById('commentsSection').classList.add('active');
+            }
+        }
+
+        // إغلاق المودال
+        function closeModal() {
+            const modal = document.getElementById('modalOverlay');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // تبديل المفضلة
+        function toggleFavorite(id) {
+            if (appState.favorites.has(id)) {
+                appState.favorites.delete(id);
+            } else {
+                appState.favorites.add(id);
+            }
+            
+            saveAppState();
+            updateAchievements();
+            
+            // تحديث الأزرار في جميع أنحاء الصفحة
+            document.querySelectorAll(`.favorite-btn[data-id="${id}"]`).forEach(btn => {
+                btn.classList.toggle('active', appState.favorites.has(id));
+            });
+            
+            // إذا كنا في قسم المفضلة، تحديث العرض
+            if (appState.currentTab === 'favorites') {
+                renderCards('favorites');
+            }
+        }
+
+        // تقييم المانهوا
+        function rateManhwa(id, rating) {
+            appState.userRatings[id] = rating;
+            
+            // تحديث بيانات المانهوا
+            const manhwa = manhwaData.find(m => m.id === id);
+            if (manhwa) {
+                manhwa.userRating = rating;
+            }
+            
+            saveAppState();
+            updateAchievements();
+            
+            // إعادة تحميل المودال إذا كان مفتوحًا لهذه المانهوا
+            const modalManhwaId = document.querySelector('#modalContent .favorite-btn')?.dataset.id;
+            if (modalManhwaId && parseInt(modalManhwaId) === id) {
+                openModal(id);
+            }
+        }
+
+        // قراءة فصل
+        function readChapter(manhwaId, chapterNum) {
+            alert(`جارٍ تحميل الفصل ${chapterNum} من ${manhwaData.find(m => m.id === manhwaId)?.title}`);
+            
+            // زيادة عدد الفصول المقروءة
+            appState.readChapters += 1;
+            saveAppState();
+            updateAchievements();
+            updateUserStats();
+        }
+
+        // إضافة تعليق
+        function addComment(manhwaId, text) {
+            if (!appState.userComments[manhwaId]) {
+                appState.userComments[manhwaId] = [];
+            }
+            
+            const comment = {
+                text,
+                date: new Date().toLocaleDateString('ar-SA'),
+                time: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })
+            };
+            
+            appState.userComments[manhwaId].push(comment);
+            
+            // تحديث بيانات المانهوا
+            const manhwa = manhwaData.find(m => m.id === manhwaId);
+            if (manhwa) {
+                if (!manhwa.userComments) manhwa.userComments = [];
+                manhwa.userComments.push(comment);
+            }
+            
+            saveAppState();
+            updateAchievements();
+            
+            // تحديث العرض
+            const commentsList = document.getElementById('commentsList');
+            if (commentsList) {
+                const commentEl = document.createElement('div');
+                commentEl.className = 'comment';
+                commentEl.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-user">مستخدم</div>
+                        <div class="comment-date">${comment.date} - ${comment.time}</div>
+                    </div>
+                    <div class="comment-text">${text}</div>
+                `;
+                commentsList.prepend(commentEl);
+                
+                // إظهار قسم التعليقات إذا كان مخفيًا
+                document.getElementById('commentsSection').classList.add('active');
+            }
+        }
+
+        // البحث الذكي
+        function initSearch() {
+            const searchBar = document.getElementById('searchBar');
+            const suggestions = document.getElementById('searchSuggestions');
+            
+            searchBar.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                appState.searchQuery = query;
+                
+                if (query.length > 0) {
+                    // البحث في البيانات
+                    const results = manhwaData.filter(manhwa =>
+                        manhwa.title.toLowerCase().includes(query.toLowerCase()) ||
+                        manhwa.author.toLowerCase().includes(query.toLowerCase()) ||
+                        manhwa.category.some(cat => cat.includes(query.toLowerCase()))
+                    ).slice(0, 5); // عرض أول 5 نتائج فقط
+                    
+                    // عرض الاقتراحات
+                    if (results.length > 0) {
+                        suggestions.innerHTML = results.map(manhwa => `
+                            <div class="suggestion-item" data-id="${manhwa.id}">
+                                <img src="${manhwa.cover}" alt="${manhwa.title}" class="suggestion-image">
+                                <div class="suggestion-text">
+                                    <div class="suggestion-title">${manhwa.title}</div>
+                                    <div class="suggestion-rating">⭐ ${manhwa.rating} • ${manhwa.author}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                        
+                        suggestions.classList.add('active');
+                        
+                        // إضافة مستمعي الأحداث للاقتراحات
+                        suggestions.querySelectorAll('.suggestion-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                const id = parseInt(item.dataset.id);
+                                openModal(id);
+                                suggestions.classList.remove('active');
+                                searchBar.value = '';
+                                appState.searchQuery = '';
+                            });
+                        });
+                    } else {
+                        suggestions.innerHTML = '<div class="suggestion-item">لا توجد نتائج</div>';
+                        suggestions.classList.add('active');
+                    }
+                } else {
+                    suggestions.classList.remove('active');
+                    renderCards();
+                }
+            });
+            
+            // إغلاق الاقتراحات عند النقر خارجها
+            document.addEventListener('click', (e) => {
+                if (!searchBar.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.classList.remove('active');
+                }
+            });
+            
+            // البحث عند الضغط على Enter
+            searchBar.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    renderCards();
+                    suggestions.classList.remove('active');
+                }
+            });
+        }
+
+        // تأثير Parallax
+        function initParallax() {
+            const layer1 = document.getElementById('parallaxLayer1');
+            const layer2 = document.getElementById('parallaxLayer2');
+            
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) * 50;
+                const y = (e.clientY / window.innerHeight) * 50;
+                
+                layer1.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+                layer2.style.transform = `translate(${x * -0.3}px, ${y * -0.3}px)`;
+            });
+            
+            document.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+                
+                layer1.style.transform = `translateY(${rate * 0.5}px)`;
+                layer2.style.transform = `translateY(${rate * 0.3}px)`;
+            });
+        }
+
+        // تهيئة مستمعي الأحداث
+        function initEventListeners() {
+            // تبديل الثيم
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // إغلاق المودال
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            
+            // التبويبات
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // إزالة النشط من الكل
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    // إضافة النشط للعنصر الحالي
+                    this.classList.add('active');
+                    
+                    appState.currentTab = this.dataset.tab;
+                    
+                    // إظهار/إخفاء الأقسام
+                    const favoritesSection = document.getElementById('favoritesSection');
+                    const achievementsSection = document.getElementById('achievementsSection');
+                    const mainContent = document.getElementById('mainContent');
+                    
+                    if (appState.currentTab === 'favorites') {
+                        favoritesSection.classList.add('active');
+                        achievementsSection.classList.remove('active');
+                        mainContent.style.display = 'none';
+                        renderCards('favorites');
+                    } else if (appState.currentTab === 'achievements') {
+                        favoritesSection.classList.remove('active');
+                        achievementsSection.classList.add('active');
+                        mainContent.style.display = 'none';
+                    } else {
+                        favoritesSection.classList.remove('active');
+                        achievementsSection.classList.remove('active');
+                        mainContent.style.display = 'block';
+                        renderCards(appState.currentTab);
+                    }
+                });
+            });
+            
+            // الفلاتر
+            document.querySelectorAll('.filter-select').forEach(select => {
+                select.addEventListener('change', () => renderCards());
+            });
+            
+            // البحث
+            initSearch();
+            
+            // منع إعادة تحميل الصفحة عند الضغط على Enter في البحث
+            document.querySelector('.search-bar').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') e.preventDefault();
+            });
+        }
+
+        // تبديل الثيم
+        function toggleTheme() {
+            appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', appState.theme);
+            localStorage.setItem('galaxyos-theme', appState.theme);
+            updateThemeIcon();
+            
+            // تأثير انتقال سلس
+            document.documentElement.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            setTimeout(() => {
+                document.documentElement.style.transition = '';
+            }, 500);
+        }
+
+        // تحسين الأداء للحركات
+        function initPerformance() {
+            // استخدام requestAnimationFrame للحركات السلسة
+            let ticking = false;
+            
+            function updateParallax() {
+                ticking = false;
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            });
+            
+            // تحسين تأثيرات الماوس
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.willChange = 'transform, opacity';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    setTimeout(() => {
+                        card.style.willChange = 'auto';
+                    }, 300);
+                });
+            });
+        }
+
+        // النسخ الاحتياطي للبيانات
+        function backupData() {
+            const backup = {
+                manhwaData,
+                appState: {
+                    favorites: Array.from(appState.favorites),
+                    userRatings: appState.userRatings,
+                    readChapters: appState.readChapters,
+                    userComments: appState.userComments
+                },
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('galaxyos-backup', JSON.stringify(backup));
+        }
+
+        // استعادة البيانات من النسخ الاحتياطي
+        function restoreData() {
+            const backup = localStorage.getItem('galaxyos-backup');
+            if (backup) {
+                const data = JSON.parse(backup);
+                console.log('البيانات المستعادة:', data);
+            }
+        }
+
+        // نسخ احتياطي تلقائي كل 5 دقائق
+        setInterval(backupData, 5 * 60 * 1000);
+
+        // تهيئة أولية للنسخ الاحتياطي
+        backupData();
+    </script>
+</body>
+</html>
