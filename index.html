@@ -1179,6 +1179,255 @@
             line-height: 1.6;
         }
 
+        /* قارئ الفصول - الإضافة الجديدة */
+        .chapter-reader-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .chapter-reader-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chapter-reader {
+            background-color: var(--bg-secondary);
+            border-radius: 20px;
+            width: 95%;
+            max-width: 1400px;
+            max-height: 95vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(50px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.6),
+                0 0 120px rgba(0, 122, 255, 0.3);
+            border: 1px solid var(--border-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chapter-reader-overlay.active .chapter-reader {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .reader-header {
+            background: var(--header-gradient);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .reader-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .reader-control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .reader-control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .reader-control-btn.close-btn:hover {
+            background: rgba(255, 59, 48, 0.3);
+            color: #FF3B30;
+        }
+
+        .reader-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .chapter-pages {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .chapter-page {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .chapter-page:hover {
+            transform: translateY(-5px);
+        }
+
+        .page-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .reader-footer {
+            padding: 1.5rem 2rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .chapter-progress {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .reader-settings {
+            position: absolute;
+            top: 5rem;
+            left: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-20px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .reader-settings.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .setting-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .setting-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
         /* التجاوب */
         @media (max-width: 1100px) {
             .cards-grid {
@@ -1220,6 +1469,41 @@
             
             .chapters-grid {
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+            
+            .reader-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .reader-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .reader-content {
+                padding: 1rem;
+            }
+            
+            .reader-footer {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .chapter-navigation {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .chapter-progress {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .progress-bar {
+                width: 150px;
             }
         }
 
@@ -1450,6 +1734,82 @@
         </div>
     </div>
 
+    <!-- قارئ الفصول - الإضافة الجديدة -->
+    <div class="chapter-reader-overlay" id="chapterReaderOverlay">
+        <div class="chapter-reader" id="chapterReader">
+            <div class="reader-header">
+                <div class="reader-title" id="readerTitle">جاري تحميل الفصل...</div>
+                <div class="reader-controls">
+                    <button class="reader-control-btn" id="readerSettingsBtn" title="الإعدادات">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="reader-control-btn" id="readerFullscreenBtn" title="ملء الشاشة">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="reader-control-btn close-btn" id="readerCloseBtn" title="إغلاق">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="reader-content" id="readerContent">
+                <div class="chapter-pages" id="chapterPages">
+                    <!-- صفحات الفصل تظهر هنا -->
+                </div>
+            </div>
+            
+            <div class="reader-footer">
+                <div class="chapter-navigation">
+                    <button class="nav-btn" id="prevChapterBtn" disabled>
+                        <i class="fas fa-chevron-right"></i>
+                        الفصل السابق
+                    </button>
+                    <button class="nav-btn" id="nextChapterBtn">
+                        الفصل التالي
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+                
+                <div class="chapter-progress">
+                    <span id="currentPage">1</span>
+                    <span>من</span>
+                    <span id="totalPages">10</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reader-settings" id="readerSettings">
+                <div class="setting-group">
+                    <label class="setting-label">وضع القراءة</label>
+                    <select class="setting-select" id="readingMode">
+                        <option value="vertical">عمودي</option>
+                        <option value="horizontal">أفقي</option>
+                        <option value="single">صفحة واحدة</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label class="setting-label">جودة الصور</label>
+                    <select class="setting-select" id="imageQuality">
+                        <option value="high">عالية</option>
+                        <option value="medium">متوسطة</option>
+                        <option value="low">منخفضة</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label class="setting-label">التحكم التلقائي</label>
+                    <select class="setting-select" id="autoScroll">
+                        <option value="off">معطل</option>
+                        <option value="slow">بطيء</option>
+                        <option value="medium">متوسط</option>
+                        <option value="fast">سريع</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // بيانات المانهوا الكاملة
         const manhwaData = [
@@ -1633,6 +1993,20 @@
             { id: 6, title: "بطل الأسبوع", desc: "اقرأ 20 فصل في أسبوع", icon: "🏆", target: 20, current: 0, type: "weekly" }
         ];
 
+        // بيانات صفحات الفصول (صور افتراضية)
+        const chapterPagesData = [
+            "https://images.unsplash.com/photo-1635805737707-575885ab0820?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1531315630201-bb15abeb1653?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1516937941344-00b4e0337589?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        ];
+
         // حالة التطبيق
         const appState = {
             theme: 'light',
@@ -1642,7 +2016,14 @@
             userComments: {},
             currentTab: 'all',
             achievements: achievementsData,
-            searchQuery: ''
+            searchQuery: '',
+            currentChapterInfo: {
+                manhwaId: null,
+                chapterNumber: null,
+                manhwaTitle: '',
+                totalPages: 0,
+                currentPage: 1
+            }
         };
 
         // تهيئة التطبيق
@@ -1678,6 +2059,9 @@
                     }, index * 100);
                 });
             }, 300);
+            
+            // تهيئة قارئ الفصول
+            initChapterReader();
         });
 
         // تحميل حالة التطبيق
@@ -2103,9 +2487,6 @@
             const manhwa = manhwaData.find(m => m.id === id);
             if (!manhwa) return;
             
-            appState.readChapters += 1;
-            updateAchievements();
-            
             const modalContent = document.getElementById('modalContent');
             
             // إنشاء الفصول
@@ -2247,7 +2628,8 @@
             chapters.forEach(chapter => {
                 chapter.addEventListener('click', function() {
                     const chapterNum = this.dataset.chapter;
-                    readChapter(manhwa.id, chapterNum);
+                    openChapterReader(manhwa.id, manhwa.title, chapterNum);
+                    closeModal(); // إغلاق المودال عند فتح القارئ
                 });
             });
             
@@ -2282,6 +2664,261 @@
             const modal = document.getElementById('modalOverlay');
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        // فتح قارئ الفصول - الإضافة الجديدة
+        function openChapterReader(manhwaId, manhwaTitle, chapterNumber) {
+            const manhwa = manhwaData.find(m => m.id === manhwaId);
+            if (!manhwa) return;
+            
+            // تحديث حالة الفصل الحالي
+            appState.currentChapterInfo = {
+                manhwaId: manhwaId,
+                chapterNumber: parseInt(chapterNumber),
+                manhwaTitle: manhwaTitle,
+                totalPages: chapterPagesData.length,
+                currentPage: 1
+            };
+            
+            // زيادة عدد الفصول المقروءة
+            appState.readChapters += 1;
+            
+            // تحديث العنوان
+            document.getElementById('readerTitle').textContent = `${manhwaTitle} - الفصل ${chapterNumber}`;
+            
+            // عرض الصفحات
+            renderChapterPages();
+            
+            // تحديث التقدم
+            updateChapterProgress();
+            
+            // تحديث أزرار التنقل بين الفصول
+            updateChapterNavigation();
+            
+            // فتح قارئ الفصول
+            const readerOverlay = document.getElementById('chapterReaderOverlay');
+            readerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // حفظ الحالة وتحديث الإنجازات
+            saveAppState();
+            updateAchievements();
+            updateUserStats();
+        }
+
+        // إغلاق قارئ الفصول - الإضافة الجديدة
+        function closeChapterReader() {
+            const readerOverlay = document.getElementById('chapterReaderOverlay');
+            readerOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // إغلاق إعدادات القارئ إذا كانت مفتوحة
+            document.getElementById('readerSettings').classList.remove('active');
+        }
+
+        // عرض صفحات الفصل - الإضافة الجديدة
+        function renderChapterPages() {
+            const pagesContainer = document.getElementById('chapterPages');
+            pagesContainer.innerHTML = '';
+            
+            const { currentPage, totalPages } = appState.currentChapterInfo;
+            
+            chapterPagesData.forEach((pageUrl, index) => {
+                const pageNumber = index + 1;
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'chapter-page';
+                pageDiv.id = `page-${pageNumber}`;
+                
+                pageDiv.innerHTML = `
+                    <img src="${pageUrl}" alt="صفحة ${pageNumber}" class="page-image">
+                    <div class="page-number">صفحة ${pageNumber}</div>
+                `;
+                
+                pagesContainer.appendChild(pageDiv);
+                
+                // جلب الصفحة الحالية إلى العرض
+                if (pageNumber === currentPage) {
+                    setTimeout(() => {
+                        pageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            });
+            
+            // تحديث العدد الإجمالي للصفحات
+            document.getElementById('totalPages').textContent = totalPages;
+        }
+
+        // تحديث شريط التقدم - الإضافة الجديدة
+        function updateChapterProgress() {
+            const { currentPage, totalPages } = appState.currentChapterInfo;
+            const progressPercentage = (currentPage / totalPages) * 100;
+            
+            document.getElementById('currentPage').textContent = currentPage;
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+        }
+
+        // تحديث أزرار التنقل بين الفصول - الإضافة الجديدة
+        function updateChapterNavigation() {
+            const { manhwaId, chapterNumber } = appState.currentChapterInfo;
+            const manhwa = manhwaData.find(m => m.id === manhwaId);
+            
+            const prevChapterBtn = document.getElementById('prevChapterBtn');
+            const nextChapterBtn = document.getElementById('nextChapterBtn');
+            
+            // الفصل السابق
+            if (chapterNumber > 1) {
+                prevChapterBtn.disabled = false;
+                prevChapterBtn.onclick = () => openChapterReader(manhwaId, manhwa.title, chapterNumber - 1);
+            } else {
+                prevChapterBtn.disabled = true;
+                prevChapterBtn.onclick = null;
+            }
+            
+            // الفصل التالي
+            if (chapterNumber < manhwa.chapters) {
+                nextChapterBtn.disabled = false;
+                nextChapterBtn.onclick = () => openChapterReader(manhwaId, manhwa.title, chapterNumber + 1);
+            } else {
+                nextChapterBtn.disabled = true;
+                nextChapterBtn.onclick = null;
+            }
+        }
+
+        // تهيئة قارئ الفصول - الإضافة الجديدة
+        function initChapterReader() {
+            // زر الإغلاق
+            document.getElementById('readerCloseBtn').addEventListener('click', closeChapterReader);
+            
+            // زر الإعدادات
+            const settingsBtn = document.getElementById('readerSettingsBtn');
+            const settingsPanel = document.getElementById('readerSettings');
+            
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsPanel.classList.toggle('active');
+            });
+            
+            // إغلاق الإعدادات عند النقر خارجها
+            document.addEventListener('click', (e) => {
+                if (!settingsPanel.contains(e.target) && e.target !== settingsBtn) {
+                    settingsPanel.classList.remove('active');
+                }
+            });
+            
+            // زر ملء الشاشة
+            const fullscreenBtn = document.getElementById('readerFullscreenBtn');
+            const reader = document.getElementById('chapterReader');
+            
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    if (reader.requestFullscreen) {
+                        reader.requestFullscreen();
+                        fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                    }
+                }
+            });
+            
+            // مراقبة تغيير وضع ملء الشاشة
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            });
+            
+            // إعدادات القراءة
+            document.getElementById('readingMode').addEventListener('change', function() {
+                const mode = this.value;
+                const pagesContainer = document.getElementById('chapterPages');
+                
+                if (mode === 'vertical') {
+                    pagesContainer.style.flexDirection = 'column';
+                } else if (mode === 'horizontal') {
+                    pagesContainer.style.flexDirection = 'row';
+                } else {
+                    pagesContainer.style.flexDirection = 'column';
+                }
+            });
+            
+            // التمرير التلقائي
+            let autoScrollInterval = null;
+            document.getElementById('autoScroll').addEventListener('change', function() {
+                const speed = this.value;
+                
+                // إيقاف أي تمرير تلقائي سابق
+                if (autoScrollInterval) {
+                    clearInterval(autoScrollInterval);
+                    autoScrollInterval = null;
+                }
+                
+                // بدء التمرير التلقائي الجديد
+                if (speed !== 'off') {
+                    const speeds = {
+                        'slow': 5000,
+                        'medium': 3000,
+                        'fast': 1500
+                    };
+                    
+                    autoScrollInterval = setInterval(() => {
+                        scrollToNextPage();
+                    }, speeds[speed]);
+                }
+            });
+            
+            // اكتشاف التمرير لتحديث الصفحة الحالية
+            const readerContent = document.getElementById('readerContent');
+            readerContent.addEventListener('scroll', updateCurrentPageFromScroll);
+        }
+
+        // التمرير إلى الصفحة التالية - الإضافة الجديدة
+        function scrollToNextPage() {
+            const { currentPage, totalPages } = appState.currentChapterInfo;
+            
+            if (currentPage < totalPages) {
+                appState.currentChapterInfo.currentPage++;
+                updateChapterProgress();
+                
+                const nextPage = document.getElementById(`page-${appState.currentChapterInfo.currentPage}`);
+                if (nextPage) {
+                    nextPage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                // إذا كانت هذه آخر صفحة، التمرير إلى الفصل التالي
+                const nextChapterBtn = document.getElementById('nextChapterBtn');
+                if (!nextChapterBtn.disabled) {
+                    nextChapterBtn.click();
+                }
+            }
+        }
+
+        // تحديث الصفحة الحالية بناءً على التمرير - الإضافة الجديدة
+        function updateCurrentPageFromScroll() {
+            const pages = document.querySelectorAll('.chapter-page');
+            const readerContent = document.getElementById('readerContent');
+            const scrollTop = readerContent.scrollTop;
+            const readerHeight = readerContent.clientHeight;
+            
+            let currentPage = 1;
+            let minDistance = Infinity;
+            
+            pages.forEach((page, index) => {
+                const pageTop = page.offsetTop;
+                const distance = Math.abs(pageTop - scrollTop - readerHeight / 2);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    currentPage = index + 1;
+                }
+            });
+            
+            if (currentPage !== appState.currentChapterInfo.currentPage) {
+                appState.currentChapterInfo.currentPage = currentPage;
+                updateChapterProgress();
+            }
         }
 
         // تبديل المفضلة
@@ -2324,17 +2961,6 @@
             if (modalManhwaId && parseInt(modalManhwaId) === id) {
                 openModal(id);
             }
-        }
-
-        // قراءة فصل
-        function readChapter(manhwaId, chapterNum) {
-            alert(`جارٍ تحميل الفصل ${chapterNum} من ${manhwaData.find(m => m.id === manhwaId)?.title}`);
-            
-            // زيادة عدد الفصول المقروءة
-            appState.readChapters += 1;
-            saveAppState();
-            updateAchievements();
-            updateUserStats();
         }
 
         // إضافة تعليق
